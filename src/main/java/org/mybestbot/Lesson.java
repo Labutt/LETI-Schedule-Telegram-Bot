@@ -29,6 +29,7 @@ public class Lesson {
     private String comment;
     private String form;
 
+    // А вот тут бы комментарий, что такое временные изменения. В коде не увидел использования
     @SerializedName("temp_changes")
     private String[] tempChanges; // Массив строк для временных изменений
 
@@ -95,5 +96,3 @@ public class Lesson {
         return url;
     }
 }
-
-// Comment for file change

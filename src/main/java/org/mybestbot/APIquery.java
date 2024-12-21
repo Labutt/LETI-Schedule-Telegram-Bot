@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class APIquery {
+public class APIquery { // Класс синглтон, не работает когда пользователей > 1
     private static String url;
     private static String groupNumberForQuery;
 
@@ -33,11 +33,12 @@ public class APIquery {
             int responseCode = con.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { // Проверяем, что ответ успешный
+            if (responseCode == HttpURLConnection.HTTP_OK) { // Проверяем, что ответ успешный // ранний выход
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                     StringBuilder response = new StringBuilder();
                     String inputLine;
 
+                    // детали, в отдельную функцию
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
@@ -50,7 +51,7 @@ public class APIquery {
                 System.out.println("GET request not worked");
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Обработка ошибки
+            e.printStackTrace(); // Обработка ошибки // лишний коммент
         } finally {
             if (con != null) {
                 con.disconnect(); // Закрываем соединение
@@ -62,10 +63,10 @@ public class APIquery {
 
     private static List<String> parseGroupList(JsonArray jsonArray) { //парсим список существующих групп
         List<String> groupList = new ArrayList<>();
-        for (int i = 0; i < jsonArray.size(); i++) {
+        for (int i = 0; i < jsonArray.size(); i++) { 
             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
             JsonArray departments = jsonObject.getAsJsonArray("departments");
-            for (int j = 0; j < departments.size(); j++) {
+            for (int j = 0; j < departments.size(); j++) { // каждый вложенный цикл в отдельную функцию
                 JsonObject department = departments.get(j).getAsJsonObject();
                 JsonArray groups = department.getAsJsonArray("groups");
                 for (int k = 0; k < groups.size(); k++) {
@@ -92,7 +93,7 @@ public class APIquery {
             int responseCode = con.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (responseCode == HttpURLConnection.HTTP_OK) { // ранний выход
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                     StringBuilder response = new StringBuilder();
                     String inputLine;
@@ -130,4 +131,3 @@ public class APIquery {
         return lessons;
     }
 }
-// Comment for file change

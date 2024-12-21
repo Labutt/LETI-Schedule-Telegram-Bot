@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class Bot extends TelegramLongPollingBot {
     HashMap<Long, String> users = new HashMap<Long, String>();
-    HashMap<Long, Boolean> usersWelcome = new HashMap<Long, Boolean>();
+    HashMap<Long, Boolean> usersWelcome = new HashMap<Long, Boolean>(); // Зачем отображение, если можно множество?
 
     @Override
     public String getBotUsername() {
@@ -30,7 +30,7 @@ public class Bot extends TelegramLongPollingBot {
     }
     public String setBotToken() {
         try {
-            Path path = Paths.get("D:\\botSource\\token.txt");
+            Path path = Paths.get("D:\\botSource\\token.txt"); // Магическая строка
             return Files.readString(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,17 +40,18 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage() && update.getMessage().hasText()) { // Лучше ранний выход
             var msg = update.getMessage();
             var user = msg.getFrom();
             var id = user.getId();
             handleMessage(msg.getText(), id);
 
-            System.out.println(user.getFirstName() + " wrote " + msg.getText()); //лог
+            System.out.println(user.getFirstName() + " wrote " + msg.getText()); //лог // Бесполезный коммент?
         }
     }
 
 
+    // Большая функция: много ответственности, много деталей и много вложений
     public  void handleMessage(String message, long id){ //обработка сообщений пользователя
         if(!usersWelcome.containsKey(id)){ //приветствие пользователя в первый раз
             sendText(id,"Добро пожаловать! Данный бот поможет вам узнать расписание вашего любимого университета! Для начала, введите номер вашей группы.");
@@ -72,15 +73,15 @@ public class Bot extends TelegramLongPollingBot {
 
         else if(users.get(id) != null){
             switch (message){ //обработка сообщений в основном цикле работы программы
-                case "Узнать расписание на эту неделю":
+                case "Узнать расписание на эту неделю": // Захардкоженные текстом варианты поведения
                     APIquery.setGroup(users.get(id));
-                    Locale russianLocale = new Locale("ru");
+                    Locale russianLocale = new Locale("ru"); // Локаль можно закешировать полем класса
                     for(int i = 0; i < 6; i++){
                         DayOfWeek day = DayOfWeek.of(i+1);
                         String dayInRussian = day.getDisplayName(TextStyle.FULL, russianLocale);
                         String weekday = String.valueOf(i);
                         sendText(id, dayInRussian.toUpperCase());
-                        if (MessageCreator.checkWeek().equals("1")) {
+                        if (MessageCreator.checkWeek().equals("1")) { // Тела ветвей ничем не отличаются
                             sendText(id, MessageCreator.sendDayScheduleWeek1(weekday));
                         }
                         else if (MessageCreator.checkWeek().equals("2")){
@@ -104,7 +105,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendText(id, "Введите другой номер группы");
                     users.put(id, null);
                     break;
-                case "Понедельник":
+                case "Понедельник": // В вариантах по дням неделм много бойлерплейта, можно отображением сделать
                     APIquery.setGroup(users.get(id));
                     sendText(id, MessageCreator.sendDaySchedule("0"));
                     break;
@@ -138,7 +139,7 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
         else {
-            sendText(id, "К сожалению, я не понимаю о чем вы."); //если непредвиденное сообщение
+            sendText(id, "К сожалению, я не понимаю о чем вы."); //если непредвиденное сообщение // Ненужный коммент
         }
     }
 
@@ -151,7 +152,7 @@ public class Bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace(); //лог, если ошибка при отправке пользователю сообщений
             System.out.println("Ошибка при отправке сообщения: " + e.getMessage());
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // Зачем перевыброс? Вызывающий код отловит?
         }
     }
 
@@ -163,7 +164,7 @@ public class Bot extends TelegramLongPollingBot {
         keyboardMarkup.setOneTimeKeyboard(false);
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("Узнать расписание на эту неделю");
+        row1.add("Узнать расписание на эту неделю"); // Магичесие строки
         row1.add("Узнать ближайшую пару");
 
         KeyboardRow row2 = new KeyboardRow();
@@ -182,7 +183,7 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(userId));
         message.setText("Выберите опцию:");
-        message.setReplyMarkup(keyboardMarkup); // Присоединяем клавиатуру
+        message.setReplyMarkup(keyboardMarkup); // Присоединяем клавиатуру // Лишний коммент
 
         try {
             execute(message);
@@ -227,10 +228,9 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Постоянный вывод стектрейса
         }
     }
 
 
 }
-// Comment for file change
