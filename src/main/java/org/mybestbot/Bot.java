@@ -30,8 +30,8 @@ public class Bot extends TelegramLongPollingBot {
     }
     public String setBotToken() {
         try {
-            Path path = Paths.get("D:\\botSource\\token.txt"); // Магическая строка
-            return Files.readString(path);
+            Path path = Paths.get("token.txt"); // Магическая строка
+            return Files.readString(path).trim();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
